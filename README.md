@@ -29,13 +29,6 @@ The Meal Planner Web Application is an advanced tool that empowers users to crea
 
 6. **Track Progress:** Users can track their progress and make adjustments to their meal plans as needed.
 
-## Technologies Used
-
-- **Frontend:** The frontend of the web application is built using HTML, CSS, and JavaScript. It incorporates the Flask framework for handling user interactions and rendering templates.
-
-- **Backend:** The backend of the application uses Python with Flask. It utilizes the GPT-3.5 language model from OpenAI for natural language processing tasks.
-
-- **Database:** Firebase Firestore is used as the database to store user information and meal plan data securely.
 
 ## Setup and Installation
 
