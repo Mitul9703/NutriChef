@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Planned Meals</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='ingredients.css')}}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='footer.css')}}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='header.css')}}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='recipe_list.css')}}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='planned_meal.css')}}">
+</head>
+
+<body>
+    <div class="header">
+        <a href="#default" class="logo">
+            <h3> Nutri<span style="color: #ff7b00">Chef</span> </h3>
+        </a>
+        <div class="header-right">
+            <a class="active" href="{{url_for('main_page')}}">Home</a>
+            <a href="#contact">Contact</a>
+            <a href="#about">About</a>
+        </div>
+    </div>
+    <h1>Planned <span style="color: #ff7b00">Meals</span></h1>
+    <div id="day-options">
+        <button id="Monday" class="day-option">Monday</button>
+        <button id="Tuesday" class="day-option">Tuesday</button>
+        <button id="Wednesday" class="day-option">Wednesday</button>
+        <button id="Thursday" class="day-option">Thursday</button>
+        <button id="Friday" class="day-option">Friday</button>
+        <button id="Saturday" class="day-option">Saturday</button>
+        <button id="Sunday" class="day-option">Sunday</button>
+    </div>
+
+    <section id="recipe-list">
+        <ul id="recipe-items">
+            <!-- Dynamically added recipe items will go here -->
+        </ul>
+    </section>
+    <!-- <div id="recipe-list"></div> -->
+    <button id="back-button">Back</button>
+    <script src="https://www.gstatic.com/firebasejs/9.4.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.4.0/firebase-firestore.js"></script>
+    <script src="{{ url_for('static', filename='planned_meal.js')}}"></script>
+    <script type="module">
+
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.4.0/firebase-app.js";
+        import { getFirestore, getDocs, collection, doc, getDoc } from "https://www.gstatic.com/firebasejs/9.4.0/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyAXsMwkBDgb_QiNg2K0YEQO17sIrTEdDkI",
+            authDomain: "adsproj-f1323.firebaseapp.com",
+            projectId: "adsproj-f1323",
+            storageBucket: "adsproj-f1323.appspot.com",
+            messagingSenderId: "965335056438",
+            appId: "1:965335056438:web:a49dc10b5634968c6a9897",
+            measurementId: "G-2E4H8SHFKK"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        document.addEventListener("DOMContentLoaded", function () {
+            const dayOptions = document.querySelectorAll(".day-option");
+            const recipeList = document.getElementById("recipe-items");
+            const backButton = document.getElementById("back-button");
+            let selectedDayButton = null;
+            
+            dayOptions.forEach(function (option) {
+                option.addEventListener("click", async function () {
+                    if (selectedDayButton) {
+                        selectedDayButton.classList.remove("active-day");
+                    }
+
+                    // Set the new selected day button and add the active class
+                    selectedDayButton = this;
+                    selectedDayButton.classList.add("active-day");
+                    
+                    const selectedDay = this.id;
+                    const recipes = await getRecipesByDay(selectedDay);
+                    clearRecipeList();
+                    displayRecipes(recipes);
+
+                });
+            });
+
+            backButton.addEventListener("click", function () {
+                clearRecipeList();
+
+            });
+
+            async function getRecipesByDay(day) {
+                try {
+                    const response = await fetch("/user_data.json");
+                    const data = await response.json();
+                    const username = data.username;
+
+                    const usersCollection = collection(db, "users");
+                    const userDoc = doc(usersCollection, username);
+                    const userSnapshot = await getDoc(userDoc);
+
+                    
+                        const userData = userSnapshot.data();
+                        const addedMeals = userData.added_meals || {};
+                        console.log(addedMeals)
+                        const recipes = addedMeals[day];
+                        console.log("Recipes for day:", recipes);
+                    
+
+                        return recipes.map((recipe) => ({
+                            title: recipe.title,
+                            ingredients: recipe.ingredients,
+                            health_score: recipe.health_score,
+                            missing_ingredients: recipe.missing_ingredients,
+                            vegetarian: recipe.vegetarian,
+                            gluten_free: recipe.gluten_free,
+                            ready_in_minutes: recipe.ready_in_minutes,
+                            price_per_serving: recipe.price_per_serving,
+                            source_url: recipe.source_url,
+                            image_url: recipe.image_url,
+                            summary: recipe.summary,
+                            servings: recipe.servings,
+                            instructions: recipe.instructions,
+                            calories: recipe.calories,
+                            fat: recipe.fat,
+                            carbohydrates: recipe.carbohydrates,
+                            protein: recipe.protein,
+                        }));
+                    } catch (error) {
+                        console.log("Error fetching recipe data:", error);
+                        return [];
+                    }
+                }
+
+            function createRecipeItem(recipe, mealType) {
+                    const item = document.createElement('li');
+                    item.classList.add('recipe-item');
+
+                    const image = document.createElement('img');
+                    image.src = recipe.image_url;
+                    image.alt = recipe.title;
+                    item.appendChild(image);
+
+                    const infoDiv = document.createElement('div');
+                    infoDiv.classList.add('recipe-info');
+
+                    const mealTypeElement = document.createElement('p');
+                    mealTypeElement.classList.add('meal-type');
+                    mealTypeElement.innerHTML = `<strong>${mealType}</strong>`;
+                    infoDiv.appendChild(mealTypeElement);
+
+                    const titleElement = document.createElement('h2');
+                    titleElement.classList.add('recipe-title');
+                    titleElement.textContent = recipe.title;
+                    infoDiv.appendChild(titleElement);
+
+
+                    const info = document.createElement('p');
+                    const infoText = `Calories: <strong>${recipe.calories}</strong> | Protein: <strong>${recipe.protein}</strong> | Carbs: <strong>${recipe.carbohydrates}</strong> | Fat: <strong>${recipe.fat}</strong>`;
+                    info.innerHTML = infoText;
+                    infoDiv.appendChild(info);
+
+
+                    const ing = document.createElement('p');
+                    ing.innerHTML = `Ingredietns: <strong>${recipe.ingredients}</strong>`
+                    infoDiv.appendChild(ing);
+
+                    const instructions = document.createElement('div');
+                    instructions.classList.add('recipe-instructions');
+
+                    recipe.instructions.forEach((step, index) => {
+                        const instructionStep = document.createElement('p');
+                        instructionStep.innerHTML = `${step}`;
+                        instructions.appendChild(instructionStep);
+                    });
+
+                    infoDiv.appendChild(instructions);
+
+
+                    const link = document.createElement('a');
+                    link.href = recipe.source_url;
+                    link.textContent = 'View Recipe';
+                    link.classList.add('recipe-link');
+                    infoDiv.appendChild(link);
+
+                    item.appendChild(infoDiv);
+
+                    return item;
+                }
+
+
+
+                function displayRecipes(recipes) {
+                    clearRecipeList();
+                    console.log(recipes)
+                    const recipeList = document.getElementById("recipe-items");
+                    console.log('YE', recipeList)
+
+                    const mealTypes = ['Breakfast', 'Lunch', 'Evening', 'Dinner'];
+                    let mealIndex = 0;
+
+                    if (recipes.length > 0) {
+                        for (let i = 0; i < recipes.length; i++) {
+                            const recipeItem = createRecipeItem(recipes[i], mealTypes[mealIndex]);
+                            recipeList.appendChild(recipeItem);
+                            mealIndex = (mealIndex + 1) % mealTypes.length;
+                        }
+                    } else {
+                        const noRecipesMessage = document.createElement("p");
+                        noRecipesMessage.textContent = "No recipes for this day";
+                        recipeList.appendChild(noRecipesMessage);
+                    }
+                }
+
+                function clearRecipeList() {
+                    while (recipeList.firstChild) {
+                        recipeList.removeChild(recipeList.firstChild);
+                    }
+                }
+
+
+            });
+
+    </script>
+</body>
+
+</html>

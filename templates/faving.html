@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <link rel="stylesheet" href="{{ url_for('static', filename='ingredients.css')}}">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <link rel="stylesheet" href="{{ url_for('static', filename='footer.css')}}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='header.css')}}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='faving.css')}}">
+</head>
+<body>
+
+  <div class="header">
+    <a href="#default" class="logo">
+      <h3> Nutri<span style="color: #ff7b00">Chef</span> </h3>
+    </a>
+    <div class="header-right">
+      <a class="active" href="{{url_for('main_page')}}">Home</a>
+      <a href="#contact">Contact</a>
+      <a href="#about">About</a>
+    </div>
+  </div>
+
+  <div>
+    <div class="container">
+      <h2>Choose your <span style="color: #ff7b00">Gender</span></h2>
+
+      <div class="list" id="checkbox-list-1">
+        <!-- checkboxes for gender will be dynamically added here -->
+      </div>
+      
+      <h2>Choose your <span style="color: #ff7b00">Activity level</span></h2>
+
+      <div class="list" id="checkbox-list-2">
+        <!-- checkboxes for activity level will be dynamically added here -->
+      </div>
+
+      <a href="{{ url_for('nutrition_count')}}">
+        <div class="button">
+          <button onclick="sendSelectedCheckboxes()">Next</button>
+        </div>
+      </a>
+    </div>
+  </div>
+  
+  
+  <script src="{{ url_for('static', filename='checkboxes.js')}}"></script>
+  <script src="{{ url_for('static', filename='faving.js')}}"></script>
+</body>
+</html>

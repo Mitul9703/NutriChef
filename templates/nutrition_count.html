@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<head>
+    <link rel="stylesheet" href="{{ url_for('static', filename='nutrition_count.css')}}">
+    
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='footer.css')}}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='header.css')}}">
+</head>
+<body>
+
+  <div class="header">
+    <a href="#default" class="logo"><h3 style="
+      margin-top: 0vh;
+      margin-bottom: 0vh;"> Nutri<span style="color: #ff7b00">Chef</span> </h3></a>
+    <div class="header-right">
+      <a class="active" href="{{url_for('main_page')}}">Home</a>
+      <a href="#contact">Contact</a>
+      <a href="#about">About</a>
+    </div>
+  </div>
+
+  <div class="grid-container">
+    <div class="slidecontainer">
+      <p class="input-label" style="color: #646363;">Select <span style="color: #ff7b00;">Weight </span> in Kg</p>
+      <p><span id="Cal"></span></p>
+      <input type="range" min="40" max="200" value="80" class="slider" id="Weight">
+    </div>
+    <div class="slidecontainer">
+      <p class="input-label" style="color: #646363;">Select <span style="color: #ff7b00;">Height </span>in cm</p>
+      <p><span id="Pro"></span></p>
+      <input type="range" min="120" max="220" value="165" class="slider" id="Height">
+    </div>
+    <div class="slidecontainer">
+      <p class="input-label" style="color: #646363;">Select <span style="color: #ff7b00;">Target Weight </span>in Kg</p>
+      <p><span id="Fat"></span></p>
+      <input type="range" min="50" max="200" value="80" class="slider" id="Target-weight">
+    </div>
+    <div class="slidecontainer">
+      <p class="input-label" style="color: #646363;">Select <span style="color: #ff7b00;">age </span>in years</p>
+      <p><span id="Carb"></span></p>
+      <input type="range" min="15" max="60" value="21" class="slider" id="age">
+    </div>
+  </div>
+  <div class="vegetarian">
+    <input type="checkbox" id="vegetarian-checkbox" name="vegetarian">
+    <label for="vegetarian-checkbox">
+      <span class="icon"><i class="fa fa-check"></i></span>
+      <span class="title">Vegetarian</span>
+    </label>
+  </div>
+  <div class="button">
+    <a href="{{ url_for('main_page')}}">
+    <button onclick="sendSliderValues()">Next</button>
+    </a>
+  </div>
+
+  <script src = "{{ url_for('static', filename='nutrition_count.js')}}"></script>
+</body>
+
+<script>
+  function sendSliderValues() {
+  var sliders = document.querySelectorAll('.slider');
+  var sliderData = [];
+  var dict = {};
+  
+  for (var i = 0; i < sliders.length; i++) {
+    var sliderId = sliders[i].id;
+    var sliderValue = sliders[i].value;
+    var sliderEntry = {};
+    dict[sliderId] = sliderValue
+    sliderEntry[sliderId] = sliderValue;
+    sliderData.push(sliderEntry);
+  }
+  const vegetarianCheckbox = document.querySelector("#vegetarian-checkbox");
+  let vegetarian_selected = false;
+  if (vegetarianCheckbox.checked) {
+      vegetarian_selected = true;
+    }
+  dict['vegetarian'] = vegetarian_selected;
+  var xhr = new XMLHttpRequest();
+  xhr.open('POST', '/process_data', true);
+  xhr.setRequestHeader('Content-Type', 'application/json;charset=UTF-8');
+  xhr.onreadystatechange = function() {
+    if (xhr.readyState === 4 && xhr.status === 200) {
+      console.log(xhr.responseText);
+    }
+  };
+  
+
+  const send_data = JSON.stringify({
+      data: dict
+    });
+    xhr.send(send_data);
+}
+
+
+
+</script>
+
+</html>

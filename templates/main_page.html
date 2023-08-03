@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Health Tracker</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='main_page.css')}}">
+
+    <style>
+        body {
+            margin: 0;
+            /* Remove default margin */
+        }
+    </style>
+</head>
+
+<body data-new-gr-c-s-check-loaded="14.1112.0" data-gr-ext-installed="">
+    <div class="header">
+        <a href="#default" class="logo">
+            <h3 style="
+            margin-top: 0vh;
+            margin-bottom: 0vh;"> Nutri<span style="color: #ff7b00">Chef</span> </h3>
+        </a>
+        <div class="header-right">
+            <a class="active" href="#home">Home</a>
+            <a href="#contact">Contact</a>
+            <a href="#about">About</a>
+        </div>
+    </div>
+    <div class="container">
+        <div class="grid">
+            <div class="water-tracker" style="
+    background: white;
+">
+                    <div>
+                    <div>
+                        <h2 style="color: #ff7b00;">Height <i class="fa-solid fa-person"></i></h2>
+                        <p><span id="height-count" style="font-weight: bold;"></span> cm</p>
+                    </div>
+                    <div>
+                        <h2 style="color: #ff7b00;">Activity <i class="fa-solid fa-person-running"></i></h2>
+                        <p><span id="activity-text" style="font-weight: bold;"></span></p>
+                    </div>
+                </div>
+                <div>
+                    <div>
+                        <h2 style="color: #ff7b00;">Age <i class="fa-solid fa-child"></i></h2>
+                        <p><span id="age-text" style="font-weight: bold;"></span></p>
+                    </div>
+                    <div>
+                        <h2 style="color: #ff7b00;">Diet <i class="fa-solid fa-utensils"></i></h2>
+                        <p><span id="veg-text" style="font-weight: bold;"></span></p>
+                    </div>
+                </div>
+                </div>
+
+                <div class="container2" style="background: white;">
+                    <div style="
+                    height: 33px;
+                "   >
+                        <h3> Nutritional Intake for a day</h3>
+                    </div>
+                    <div>
+
+                        <div>
+                        <h4 style="color: #ff7b00; display: inline;">Calories <i class="fa-solid fa-fire"></i></h4>
+                        <p style="display: inline;"><span id="Calorie-count" style="font-weight: bold;">2000</span> Kcal</p>
+                        </div>
+                    </div>
+                    <div>
+                        <div>
+                        <h4 style="color: #ff7b00; display: inline;">Protein <i class="fa-solid fa-dumbbell"></i></h4>
+                        <p style="display: inline;"><span id="Protein-text" style="font-weight: bold;">80</span> g</p>
+                        </div>
+                    </div>
+                    <div>
+                        <div>
+                        <h4 style="color: #ff7b00; display: inline;">Carbs <i class="fa-solid fa-bowl-rice"></i></h4>
+                        <p style="display: inline;"><span id="Carbs-text" style="font-weight: bold;">100</span> g</p>
+                    </div>
+                    </div>
+                    <div>
+                    <div>
+                        <h4 style="color: #ff7b00; display: inline;">Fat <i class="fa-solid fa-droplet"></i></h4>
+                        <p style="display: inline;"><span id="Fat-text" style="font-weight: bold;">50</span> g</p>
+                    </div>
+                    </div>
+                </div>
+                
+                <div id="weight-tracker" style="
+    background: white;
+">
+                    <div style="margin: 10px;/* flex: 1; */">
+                        <i class="fa-solid fa-weight-scale fa-2xl" style="color: #ff8800;"></i>
+                    </div>
+                    <div style="
+margin: 10px;
+flex: 1;
+text-align: center;
+">
+                        <span>
+                            <h1>
+                                <span id="weight-count"><span id="current-weight"></span> kg</span>
+                            </h1>
+                            Target: <span id="target-weight"></span> kg
+                        </span>
+
+                    </div>
+
+                    <div style="
+flex: 1;
+text-align: center;
+/* justify-content: center; */
+">
+                        <i class="fa-solid fa-circle-plus fa-2xl" button="" id="weight-increase"
+                            style="color: #ff7b00;"></i>
+                    </div>
+                    <div style="
+flex: 1;
+text-align: center;
+">
+                        <i class="fa-solid fa-circle-minus fa-2xl" button="" id="weight-decrease"
+                            style="color: #ff7b00;"></i>
+                    </div>
+
+                </div>
+                <div class = "Button_layout">
+                <a href="{{ url_for('planned_meal') }}">
+                    <button id="meal-plan-button">View Meal Plan</button></a>
+                <a href="{{ url_for('recipe_list') }}">
+                    <button id="add-plan-button">Add Meal Plan</button></a>
+                <a href="{{ url_for('faving') }}">
+                    <button id="add-plan-button">Change data</button></a>
+                </div>
+            </div>
+
+        </div>
+
+        <script src="/static/main_page.js"></script>
+
+
+        <webhighlights-context></webhighlights-context>
+        <div id="webhighlights-notifications"></div><app-weava-root id="weava-root" class="weava"
+            ng-version="12.2.16"></app-weava-root><webhighlights-extension></webhighlights-extension>
+        <style id="web-highlights-global-styles">
+            webhighlights-sidebar {
+                --webhighlights-font-size: 13.5px;
+            }
+
+            body.web-highlights-animate {
+                transition: margin-left 300ms linear;
+            }
+
+            body.web-highlights-open {
+                margin-left: 360px;
+            }
+        </style>
+        <webhighlights-sidebar></webhighlights-sidebar><webhighlights-popup-toolbox></webhighlights-popup-toolbox><webhighlights-notification></webhighlights-notification><webhighlights-marker></webhighlights-marker>
+</body>
+
+</html>

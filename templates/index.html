@@ -1,0 +1,79 @@
+<html>
+<head>
+  <link rel="stylesheet" href="{{ url_for('static', filename='ingredients.css')}}">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <link rel="stylesheet" href="{{ url_for('static', filename='footer.css')}}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='header.css')}}">
+  
+</head>
+<body>
+
+  <div class="header">
+    <a href="#default" class="logo"><h3> Nutri<span style="color: #ff7b00">Chef</span> </h3></a>
+    <div class="header-right">
+      <a class="active" href="{{url_for('main_page')}}">Home</a>
+      <a href="#contact">Contact</a>
+      <a href="#about">About</a>
+    </div>
+  </div>
+
+
+  <div class="container">
+    <h2> Choose your <span style="color: #ff7b00"> Ingredients </span> </h2>
+    <div class="search-bar">
+      <label for="platform-search">    Search </label>
+      <input type="text" id="platform-search">
+      <button onclick="searchPlatforms()">Search</button>
+      <button onclick="displayALL()">Display All</button>
+    </div>
+    <div class="list" id="checkbox-list">
+      <!-- checkboxes will be dynamically added here -->
+    </div>
+    <div class="vegetarian">
+      <input type="checkbox" id="vegetarian-checkbox" name="vegetarian">
+      <label for="vegetarian-checkbox">
+        <span class="icon"><i class="fa fa-check"></i></span>
+        <span class="title">Vegetarian</span>
+      </label>
+    </div>
+  
+  <div class="button">
+    <a href="{{ url_for('faving', checkboxes=selectedCheckboxes) }}">
+    <button onclick="" >Next</button>
+    </a>
+  </div>
+  </div>
+  <script>
+function sendSelectedCheckboxes() {
+  const xhr = new XMLHttpRequest();
+  xhr.open("POST", "/process_data", true);
+  xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+  xhr.onreadystatechange = function() {
+    if (xhr.readyState === 4 && xhr.status === 200) {
+      console.log(xhr.responseText);
+    }
+  };
+
+  const data = document.querySelectorAll("input[name='platform']:checked");
+  const selectedCheckboxes = Array.from(data).map(checkbox => checkbox.id);
+  
+  const send_data = JSON.stringify({
+      data: {
+        "Ingredients": selectedCheckboxes,
+        
+      }
+    });
+    xhr.send(send_data);
+}
+
+
+
+  </script>
+  
+
+
+
+  <script src="{{ url_for('static', filename='index.js')}}"></script>
+</body>
+
+</html>

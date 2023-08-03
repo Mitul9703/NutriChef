@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Recipe List</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='ingredients.css')}}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='footer.css')}}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='header.css')}}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='recipe_list.css')}}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='loader.css')}}">
+</head>
+<body>
+    <div class="header">
+        <a href="#default" class="logo"><h3> Nutri<span style="color: #ff7b00">Chef</span> </h3></a>
+        <div class="header-right">
+          <a class="active" href="{{url_for('main_page')}}">Home</a>
+          <a href="#contact">Contact</a>
+          <a href="#about">About</a>
+        </div>
+    </div>
+    <div class="refresh">
+      <button id="refresh-button" onClick="window.location.reload(true)">Refresh</button></a>
+    </div>
+
+    <div class="pan-loader" id="loader">
+        <div class="loader"></div>
+        <div class="pan-container">
+            <div class="pan"></div>
+            <div class="handle"></div>
+        </div>
+        <div class="shadow"></div>
+    </div>
+
+    <section id="recipe-list">
+        <ul id="recipe-items">
+            <!-- Dynamically added recipe items will go here -->
+        </ul>
+    </section>
+
+    <div id="meal-options-container" style="display: none;">
+        <h2>Select a day to add the meal:</h2>
+        <div id="meal-options">
+            <button class="meal-option">Monday</button>
+            <button class="meal-option">Tuesday</button>
+            <button class="meal-option">Wednesday</button>
+            <button class="meal-option">Thursday</button>
+            <button class="meal-option">Friday</button>
+            <button class="meal-option">Saturday</button>
+            <button class="meal-option">Sunday</button>
+        </div>
+        <button id="cancel-add-meal">Cancel</button>
+    </div>
+
+    <button id="add-meal-button">Add Meal</button>
+    <a href="{{ url_for('planned_meal')}}">
+    <button id="view-meal-button">View added Meals</button></a>
+
+    <script src="{{ url_for('static', filename='recipe_list.js')}}"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.4.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.4.0/firebase-firestore.js"></script>
+    <script type = "module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.4.0/firebase-app.js";
+        import { getFirestore, collection, addDoc, doc,setDoc,updateDoc,getDoc} from "https://www.gstatic.com/firebasejs/9.4.0/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyAXsMwkBDgb_QiNg2K0YEQO17sIrTEdDkI",
+    authDomain: "adsproj-f1323.firebaseapp.com",
+    projectId: "adsproj-f1323",
+    storageBucket: "adsproj-f1323.appspot.com",
+    messagingSenderId: "965335056438",
+    appId: "1:965335056438:web:a49dc10b5634968c6a9897",
+    measurementId: "G-2E4H8SHFKK"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        async function addMealToDay(day, meal) {
+  try {
+    const response1 = await fetch('/added_meal.json', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ day, meal })
+    });
+
+    if (response1.ok) {
+      const result = await response1.json();
+      console.log('Meal added successfully:', meal);
+    } else {
+      console.log('Failed to add meal:', response1.status);
+
+    }
+    const response = await fetch("/user_data.json");
+    const data = await response.json();
+    const username = data.username;
+    const usersCollection = collection(db, "users");
+    const userDoc = doc(usersCollection, username);
+    const userSnapshot = await getDoc(userDoc);
+
+    if (userSnapshot.exists()) {
+      const userData = userSnapshot.data();
+      const addedMeals = userData.added_meals || {};
+
+      // Update the specific day with the meal
+      addedMeals[day] = meal;
+
+      await setDoc(userDoc, { added_meals: addedMeals }, { merge: true });
+
+      
+      console.log('User meal data updated successfully:', addedMeals);
+    } else {
+      console.log('User document does not exist.');
+    }
+
+  } catch (error) {
+    console.log('Error adding meal:', error);
+  }
+}
+// Function to handle the addition of a meal to a specific day
+const addMeal = document.getElementById('add-meal-button');
+addMeal.style.background = 'white';
+
+
+
+// Function to display the meal options container
+function showMealOptions() {
+  const mealOptionsContainer = document.getElementById('meal-options-container');
+  mealOptionsContainer.style.display = 'grid';
+  mealOptionsContainer.style.justifyItems = 'center';
+}
+
+// Function to hide the meal options container
+function hideMealOptions() {
+  const mealOptionsContainer = document.getElementById('meal-options-container');
+  mealOptionsContainer.style.display = 'none';
+}
+
+// Function to fetch recipe data from JSON file
+async function fetchRecipes() {
+  try {
+    const response = await fetch("/selected_recipes.json");
+    const data = await response.json();
+    return data.map((recipe) => ({
+      title: recipe.title,
+      ingredients: recipe.ingredients,
+      health_score: recipe.health_score,
+      missing_ingredients: recipe.missing_ingredients,
+      vegetarian: recipe.vegetarian,
+      gluten_free: recipe.gluten_free,
+      ready_in_minutes: recipe.ready_in_minutes,
+      price_per_serving: recipe.price_per_serving,
+      source_url: recipe.source_url,
+      image_url: recipe.image_url,
+      summary: recipe.summary,
+      servings: recipe.servings,
+      instructions: recipe.instructions,
+      calories: recipe.calories,
+      fat: recipe.fat,
+      carbohydrates: recipe.carbohydrates,
+      protein: recipe.protein,
+    }));
+  } catch (error) {
+    console.log('Error fetching recipe data:', error);
+    return [];
+  }
+}
+
+// Function to create a recipe item
+function createRecipeItem(recipe, mealType) {
+  const item = document.createElement('li');
+  item.classList.add('recipe-item');
+
+  const image = document.createElement('img');
+  image.src = recipe.image_url;
+  image.alt = recipe.title;
+  item.appendChild(image);
+
+  const infoDiv = document.createElement('div');
+  infoDiv.classList.add('recipe-info');
+
+  const mealTypeElement = document.createElement('p');
+  mealTypeElement.classList.add('meal-type');
+  mealTypeElement.innerHTML = `<strong>${mealType}</strong>`;
+  infoDiv.appendChild(mealTypeElement);
+
+  const titleElement = document.createElement('h2');
+  titleElement.classList.add('recipe-title');
+  
+ 
+  const titleIcon = document.createElement("i");
+  
+  titleIcon.textContent = recipe.vegetarian ? "\u25CF" : "\u25CF";
+  titleIcon.style.color = recipe.vegetarian ? "#44ff00" : "red";
+  titleElement.appendChild(titleIcon);
+  titleElement.append(' ' + recipe.title);
+  infoDiv.appendChild(titleElement);
+
+  const info = document.createElement('p');
+  const infoText = `Calories: <strong>${recipe.calories}</strong> | Protein: <strong>${recipe.protein}</strong> | Carbs: <strong>${recipe.carbohydrates}</strong> | Fat: <strong>${recipe.fat}</strong>`;
+  info.innerHTML = infoText;
+  infoDiv.appendChild(info);
+
+  const summary = document.createElement('p');
+  summary.innerHTML = recipe.summary;
+  infoDiv.appendChild(summary);
+
+  const link = document.createElement('a');
+  link.href = recipe.source_url;
+  link.textContent = 'View Recipe';
+  link.classList.add('recipe-link');
+  infoDiv.appendChild(link);
+
+  item.appendChild(infoDiv);
+
+  return item;
+}
+
+// Function to add recipe items to the list
+// Function to add recipe items to the list
+async function addRecipeItems() {
+  const recipeList = document.getElementById('recipe-items');
+  const loadingMessage = document.getElementById('loader');
+  const addMeal = document.getElementById('add-meal-button')
+  const viewmeal = document.getElementById('view-meal-button');
+  const refresh = document.getElementById('refresh-button');
+  
+
+  loadingMessage.style.display = 'block';
+  recipeList.style.display = 'none';
+  addMeal.style.background = '#f5f5f5';
+  viewmeal.style.background = '#f5f5f5';
+  viewmeal.style.borderColor = "#f5f5f5";
+  viewmeal.style.color = "#f5f5f5";
+  refresh.style.background = '#f5f5f5';
+
+  setTimeout(async () => {
+    const recipes = await fetchRecipes();
+    loadingMessage.style.display = 'none';
+    recipeList.style.display = 'block';
+    addMeal.style.background = '#ff7b00';
+    viewmeal.style.background = 'white';
+    viewmeal.style.borderColor = "#ff7b00";
+    viewmeal.style.color = "#ff7b00";
+    refresh.style.background = '#ff7b00';
+    const mealTypes = ['Breakfast', 'Lunch', 'Evening', 'Dinner'];
+    let mealIndex = 0;  
+
+    if (recipes && Array.isArray(recipes)) {
+      if (recipes.length > 0) {
+        for (let i = 0; i < recipes.length; i++) {
+          const recipeItem = createRecipeItem(recipes[i], mealTypes[mealIndex]);
+          recipeList.appendChild(recipeItem);
+          mealIndex = (mealIndex + 1) % mealTypes.length;
+        }
+      } else {
+        const noRecipesMessage = document.createElement('p');
+        noRecipesMessage.textContent = 'No recipes for this combination';
+        recipeList.appendChild(noRecipesMessage);
+        noRecipesMessage.style = "padding-left: 42%;"
+      }
+    } else {
+      const errorMessage = document.createElement('p');
+      errorMessage.textContent = 'Error fetching recipe data';
+      recipeList.appendChild(errorMessage);
+    }
+  }, 500);
+}
+
+// Call the function to add recipe items on page load
+window.onload = addRecipeItems;
+
+// Add event listener to "Add Meal" button
+const addMealButton = document.getElementById('add-meal-button');
+addMealButton.addEventListener('click', showMealOptions);
+
+// Add event listener to "Cancel" button in meal options
+const cancelAddMealButton = document.getElementById('cancel-add-meal');
+cancelAddMealButton.addEventListener('click', hideMealOptions);
+
+// Add event listeners to meal options  
+const mealOptions = document.querySelectorAll('.meal-option');
+mealOptions.forEach((option) => {
+  option.addEventListener('click', async function () {
+    const selectedDay = option.textContent;
+    const recipes = await fetchRecipes();
+
+    // Assuming you want to select a random recipe from the available options
+    const selectedRecipe = recipes[Math.floor(Math.random() * recipes.length)];
+
+    addMealToDay(selectedDay, recipes);
+    hideMealOptions();
+  });
+});
+    </script>
+</body>
+</html>
