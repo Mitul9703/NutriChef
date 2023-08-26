@@ -1,3 +1,8 @@
+
+![NutriChef ](https://github.com/Mitul9703/NutriChef/assets/60043776/b569ad00-c08a-446f-89ed-adb78d624e6a)
+
+
+
 # NutriChef
 
 
@@ -15,6 +20,7 @@ The Meal Planner Web Application is an advanced tool that empowers users to crea
 
 - **Knapsack Problem Optimization:** The application uses the Branch and Bound algorithm to optimize the meal plans, ensuring that the selected recipes meet users' nutritional requirements while satisfying their dietary preferences.
 
+
 ## How It Works
 
 1. **Login or Sign Up:** Users can either log in to their existing accounts or sign up to access the meal planner features.
@@ -28,6 +34,14 @@ The Meal Planner Web Application is an advanced tool that empowers users to crea
 5. **Recipe Recommendations:** The application provides a list of recipe recommendations for each meal, ensuring a diverse and enjoyable meal experience for users.
 
 6. **Track Progress:** Users can track their progress and make adjustments to their meal plans as needed.
+
+
+
+## Demo 
+
+
+https://github.com/Mitul9703/NutriChef/assets/60043776/d1f2cb8e-7f95-4e7e-9b96-eaba7b97fdc0
+
 
 
 ## Setup and Installation
