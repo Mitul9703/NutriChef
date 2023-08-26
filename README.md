@@ -39,9 +39,36 @@ The Meal Planner Web Application is an advanced tool that empowers users to crea
 
 ## Demo 
 
+![Demo](https://github.com/Mitul9703/NutriChef/assets/60043776/e459d3c8-148a-4eba-9b3f-1b69fca56161)
 
-https://github.com/Mitul9703/NutriChef/assets/60043776/d1f2cb8e-7f95-4e7e-9b96-eaba7b97fdc0
+## Screenshots
 
+
+Login Page
+
+![Login page](https://github.com/Mitul9703/NutriChef/assets/60043776/379a1be8-3ea5-4b84-9112-1d5654fa4725)
+
+Dashboard
+
+![Dashboard](https://github.com/Mitul9703/NutriChef/assets/60043776/268c2b9b-9614-4002-9416-9d3031c84ce2)
+
+Add/Modify your Data
+
+![changingData](https://github.com/Mitul9703/NutriChef/assets/60043776/637f7d34-73d6-47d4-9e1d-f82b2b699303)
+
+![choosingPreferences](https://github.com/Mitul9703/NutriChef/assets/60043776/dbf2597a-fc4b-414d-b6f6-ad284c6a0c97)
+
+Suggested Meal Plan for a Day
+
+![Suggested Meal](https://github.com/Mitul9703/NutriChef/assets/60043776/2d7298bc-66ca-47de-8d20-f987d57bb6f0)
+
+Add a Meal Plan
+
+![Add a meal](https://github.com/Mitul9703/NutriChef/assets/60043776/68b4e4ce-4a0c-43c9-8d1d-196a74e95226)
+
+View your added meals
+
+![view your planned meals](https://github.com/Mitul9703/NutriChef/assets/60043776/f4abceaa-bd5b-4c17-b56a-30c06f2d5fc8)
 
 
 ## Setup and Installation
