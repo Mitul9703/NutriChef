@@ -379,3 +379,35 @@ body {
     grid-column: 1/span 2;
     justify-content: space-between;
   }
+
+  .page-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+
+
+
+  .loader {
+    border: 10px solid rgba(0, 0, 0, 0.1);
+    border-top: 10px solid #ff7b00;
+    border-radius: 50%;
+    width: 125px;
+    height: 125px;
+    animation: spin 1s linear infinite;
+    margin: 0 auto;
+    display: none; /* Initially hidden */
+  }
+  
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+  

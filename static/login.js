@@ -66,9 +66,30 @@ async function verifyLogin(username, password) {
   }
 }
 
+const hideOnLoaderElements = document.querySelectorAll(".page-container");
+hideOnLoaderElements.forEach(element => {
+  element.style.display = "none";
+});
+
 // Handle the form submission
 function login(event) {
   event.preventDefault();
+
+
+  const hideOnLoaderElements1 = document.querySelectorAll(".page-container");
+  hideOnLoaderElements1.forEach(element => {
+    element.style.display = "flex";
+  });
+  // Show the loader while verifying
+  const loader = document.getElementById("loader");
+  loader.style.display = "block";
+
+
+
+  const hideOnLoaderElements = document.querySelectorAll(".hide-on-loader");
+  hideOnLoaderElements.forEach(element => {
+    element.style.display = "none";
+  });
 
   // Get the input values
   const username = document.getElementById("username-input").value;
@@ -78,8 +99,15 @@ function login(event) {
   // Verify the login credentials
   verifyLogin(username, password)
     .then((isLoggedIn) => {
+
+      loader.style.display = "none";
+
+
       if (isLoggedIn) {
         // Login successful, redirect to the homepage
+        hideOnLoaderElements.forEach(element => {
+          element.style.display = "block";
+        });
         window.location.href = "main_page";
       } else {
         // Login failed, display an error message
